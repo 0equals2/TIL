@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>{{ draw_no }} 회차의 로또 당첨 정보 입니다.</h1>
+{% if numbers %}
+<ul>
+    {% for number in numbers %}
+        <li>{{ number }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+    <h2>해당 회차는 검색이 되지 않습니다.</h2>
+{% endif %}
+</body>
+</html>
