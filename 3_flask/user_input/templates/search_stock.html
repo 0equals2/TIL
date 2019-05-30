@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Stock Quote</title>
+</head>
+<body>
+<form action="/search_result">
+    <input name="keyword" type="text" placeholder="Enter stcok code" autofocus>
+    <input type="submit" value="search">
+</form>
+{% if not is_first_search %}
+<section>
+    {% if result %}
+        <p>{{c_name}} $ {{l_price}}</p>
+    {% else %}
+        <p>해당 주식 정보를 불러올 수 없습니다.</p>
+    {% endif %}
+</section>
+{% endif %}
+
+</body>
+</html>
