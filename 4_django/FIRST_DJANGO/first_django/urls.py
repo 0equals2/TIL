@@ -8,4 +8,6 @@ urlpatterns = [
     #path('index/', views.index),
     #path('hello/<str:name>/', views.hello)
     path('', include('home.urls')),
+    path('utils/',include('utils.urls')),
+
 ]
