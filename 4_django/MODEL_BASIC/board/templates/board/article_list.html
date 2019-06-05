@@ -1,0 +1,9 @@
+{% extends 'board/base.html' %}
+
+{% block body %}
+<h1>Article list</h1>
+    {% for article in articles %}
+        <h2><a href="/board/{{ article.id}}">{{ article.title }}</a></h2>
+
+    {% endfor %}
+{% endblock %}
