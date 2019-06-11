@@ -1,0 +1,26 @@
+{% extends 'articles/base.html' %}
+{% block body %}
+    <h1>여기는 인덱스입니다.</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">title</th>
+          <th scope="col">username</th>
+          <th scope="col">method</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for article in articles %}
+        <tr>
+          <th scope="row">{{article.id}}</th>
+          <td>{{article.title}}</td>
+          <td>{{article.user}}</td>
+          <td>
+              <a href="{% url 'articles:detail' article.id %}">글보기</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+{% endblock %}

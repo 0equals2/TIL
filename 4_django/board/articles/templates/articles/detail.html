@@ -1,0 +1,30 @@
+{% extends 'articles/base.html' %}
+{% block body %}
+<div class="card">
+    <img src="https://picsum.photos/id/{{article.id}}/1000/100" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">{{article.title}}</h5>
+            <p class="card-text">{{article.content}}</p>
+            <a class="btn btn-danger" href="{% url 'articles:delete' article.id %}">삭제</a>
+            <a class="btn btn-warning" href="{% url 'articles:update' article.id %}">수정</a>
+    </div>
+</div>
+
+<form action="{% url 'articles:comment_create' article.id %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="comment">댓글작성</label>
+        <input type="text" class="form-control" id="comment" placeholder="댓글작성해주세요" name="content">
+    </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<div class="my-3">
+    {% for comment in article.comment_set.all %}
+        <div class="alert alert-primary d-flex justify-content-between" role="alert">
+            {{comment.user}} : {{comment.content}}
+            <a class="btn btn-outline-danger" href="{% url 'articles:comment_delete' article.id comment.id %}" role="button">삭제</a>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

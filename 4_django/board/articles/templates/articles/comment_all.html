@@ -1,0 +1,10 @@
+{% extends 'articles/base.html' %}
+
+{% block body %}
+    <h1>로그인한 유저 : {{user}}</h1>
+    {% for comment in user.comment_set.all %}
+        <div class="alert alert-success" role="alert">
+          {{comment.content}}
+        </div>
+    {% endfor %}
+{% endblock %}
