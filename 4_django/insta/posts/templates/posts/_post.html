@@ -1,0 +1,9 @@
+<div class="card col-6 my-3">
+  <img src="https://picsum.photos/id/{{post.id}}/300/300" class="card-img-top" alt="...">
+  <div class="card-body">
+<!--    <h5 class="card-title">Card title</h5>-->
+    <p class="card-text">{{post.content}}</p>
+<!--    <a href="#" class="btn btn-primary">Go somewhere</a>-->
+      <a class="btn btn-warning" href="{% url 'posts:update' post.id %}">수정</a>
+  </div>
+</div>
