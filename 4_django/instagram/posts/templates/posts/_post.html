@@ -1,0 +1,43 @@
+{% load bootstrap4 %}
+<div class="card col-6 my-3">
+    {% if post.image %}
+        <img src="{{post.image.url}}" class="card-img-top" alt="...">
+    {% else %}
+        <img src="https://picsum.photos/id/{{post.id}}/300/300" class="card-img-top" alt="...">
+    {% endif %}
+    <div class="card-body">
+    <!--    <h5 class="card-title">Card title</h5>-->
+        <p>{{post.like_users.count}}명이 좋아합니다.</p>
+        <p class="card-text"><div><strong>{{post.user.username}}</strong></div>{{post.content}}</p>
+        <!--    <a href="#" class="btn btn-primary">Go somewhere</a>-->
+        {% if user in post.like_users.all %}
+            <a href="{% url 'posts:likes' post.id %}"><i class="fas fa-heart" style="color:#ed4956"></i></a>
+        {% else %}
+            <a href="{% url 'posts:likes' post.id %}"><i class="far fa-heart" style="color:black"></i></a>
+        {% endif %}
+        {% if post.user == user %}
+            <a class="btn btn-warning" href="{% url 'posts:update' post.id %}">수정</a>
+            <a class="btn btn-danger" href="{% url 'posts:delete' post.id %}">삭제</a>
+
+        {% endif %}
+    </div>
+    <!--    댓글 출력 시작-->
+    <div class="card-body">
+        {% for comment in post.comment_set.all %}
+            <p><strong>{{comment.user.username}}</strong> {{comment.content}}</p>
+        {% empty %}
+            <p>댓글이 없습니다.</p>
+        {% endfor %}
+    </div>
+    <!--    댓글 출력 끝-->
+    <!--   댓글  폼 시작-->
+    <div class="card-body">
+        <form action="{% url 'posts:comment_create' post.id %}" method="post">
+            {% csrf_token %}
+            {# bootstrap_form comment_form #}
+            {% bootstrap_field comment_form.content show_label=False %}
+            <input type="submit">
+        </form>
+    </div>
+    <!--    댓글 폼 끝-->
+</div>
