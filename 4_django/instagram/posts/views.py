@@ -8,12 +8,12 @@ def index(request):
     posts = Post.objects.all().order_by('-id')
     comment_form = CommentForm()
     context = {
-        'posts':posts,
+        'posts': posts,
         'comment_form': comment_form
     }
     return render(request, 'posts/index.html', context)
 
-@login_required()
+@login_required
 def create(request):
     # 1. get방식으로 데이터를 입력할 수 있는 form을 요청한다.
     # 4. 사용자가 데이터를 입력해서 post 요청을 보낸다.
@@ -26,7 +26,7 @@ def create(request):
         # 11. 데이터 검증을 한다.
         if form.is_valid():
             # 12. 적절한 데이터가 들어온다. 저장을 하고 인덱스로 보낸다.
-            post =form.save(commit=False)
+            post = form.save(commit=False)
             post.user = request.user
             post.save()
             return redirect("posts:index")
@@ -44,11 +44,11 @@ def create(request):
     # 8. 사용자가 정확하게 입력한 데이터를 유지한 상태의 form을 전송
     return render(request, 'posts/form.html', context)
 
-@login_required()
+@login_required
 def update(request, post_id):
     post = Post.objects.get(id=post_id)
     if request.user == post.user:
-        #내가 작성한 글일 때
+        # 내가 작성한 글일때
         if request.method == "POST":
             form = PostForm(request.POST, instance=post)
             if form.is_valid():
@@ -60,39 +60,31 @@ def update(request, post_id):
             form = PostForm(instance=post)
         return render(request, 'posts/form.html', {'form':form})
     else:
-        pass
-        #내가 작성하지 않은 글일 때
-
-
-@login_required()
-def delete(request, post_id):
-    post = Post.objects.get(id=post_id)
-    if request.user == post.user:
-        post.delete()
+        # 내가 작성하지 않은 글일때
         return redirect("posts:index")
-    else:
-        pass
 
-@login_required()
+@login_required
 def comment_create(request, post_id):
     post = Post.objects.get(id=post_id)
     if request.method == "POST":
         comment_form = CommentForm(request.POST)
         if comment_form.is_valid():
             comment = comment_form.save(commit=False)
-            comment.user = request.user  # 지금 로그인한 사람에 대한 정보
-            comment.post = post  # 지금 내가 어떤 게시물에 속해있는지에 대한 정보
+            comment.user = request.user
+            comment.post = post
             comment.save()
             return redirect('posts:index')
 
-@login_required()
+
+@login_required
 def likes(request, post_id):
     user = request.user
     post = Post.objects.get(id=post_id)
-    # 이미 좋아요가 눌려있으면
+    # 이미 좋아요가 눌려졌으면
     if user in post.like_users.all():
         # 좋아요 취소
         post.like_users.remove(user)
+    # 좋아요 안했으면
     else:
         # 좋아요 추가
         post.like_users.add(user)

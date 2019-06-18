@@ -11,10 +11,10 @@ urlpatterns = [
     path('create/', views.create, name="create"),
     # Update - 포스트 수정하기
     path('<int:post_id>/update/', views.update, name="update"),
-    # Delete
-    path('<int:post_id>/delete/', views.delete, name="delete"),
 
-    #comment_create
+    # Comment_create
     path('<int:post_id>/comments/create/', views.comment_create, name="comment_create"),
+
+    # like
     path('<int:post_id>/likes/', views.likes, name="likes"),
 ]
