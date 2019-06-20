@@ -4,7 +4,11 @@
 <div class="row">
     <div class="col-4 d-flex justify-content-center">
         <!--프로필이미지 넣는공간-->
-        <img src="https://picsum.photos/id/{{user_info.id}}/150/150" alt="..." class="rounded-circle">
+        {% if user_info.image %}
+            <img src="{{user_info.image.url}}" alt="profile_image" class="rounded-circle">
+        {% else %}
+            <img src="https://picsum.photos/id/{{user_info.id}}/150/150" alt="..." class="rounded-circle">
+        {% endif %}
     </div>
     <div class="col-8">
         <!-- 정보가 보여지는 공간 -->
@@ -15,11 +19,16 @@
             {% else %}
                 <a class="btn btn-primary" href="{% url 'accounts:follow' user_info.id %}">팔로우</a>
             {% endif %}
+        {% else %}
+            <a class="btn btn-warning" href="{% url 'accounts:update' user_info.id %}">프로필수정</a>
         {% endif %}
         <div class="d-flex justify-content-around">
             <p>게시물 {{user_info.post_set.count}}</p>
             <p>팔로워 {{user_info.follower.count}}</p>
             <p>팔로우 {{user_info.follow.count}}</p>
+        </div>
+        <div>
+            {{user_info.introduce}}
         </div>
     </div>
 </div>

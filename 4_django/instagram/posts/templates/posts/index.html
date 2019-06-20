@@ -1,8 +1,15 @@
 {% extends 'posts/base.html' %}
 
 {% block body %}
+{% if request.resolver_match.url_name == 'index' %}
+    <h1>index</h1>
+{% elif request.resolver_match.url_name == 'all' %}
+    <h1>전체목록</h1>
+{% else %}
+    <h1>{{hashtag.content}}</h1>
+{% endif %}
 {% for post in posts %}
-    <div class="row" id="post_{{post.id}}">
+    <div class="row">
         {% include 'posts/_post.html' %}
     </div>
 {% endfor %}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="me">
+
+    </div>
+    <button id="my-button">click</button>
+    <script>
+        const button =document.querySelector('button')
+        button.addEventListener('click',e => {
+	        const div = document.querySelector('#me')
+	        div.innerText = 'hihi'
+        })
+    </script>
+</body>
+</html>

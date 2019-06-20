@@ -1,10 +1,24 @@
 from django.shortcuts import render, redirect
 from .forms import PostForm, CommentForm
-from .models import Post
+from .models import Post, HashTag
 from django.contrib.auth.decorators import login_required
+from itertools import chain
+from django.http import JsonResponse
 
 # Create your views here.
+@login_required
 def index(request):
+    user_follow = request.user.follow.all()
+    follow_list = chain(user_follow, [request.user])
+    posts = Post.objects.order_by('-id').filter(user__in=follow_list)
+    comment_form = CommentForm()
+    context = {
+        'posts': posts,
+        'comment_form': comment_form
+    }
+    return render(request, 'posts/index.html', context)
+
+def all(request):
     posts = Post.objects.all().order_by('-id')
     comment_form = CommentForm()
     context = {
@@ -29,6 +43,19 @@ def create(request):
             post = form.save(commit=False)
             post.user = request.user
             post.save()
+
+            #해시태그 추가
+            content = form.cleaned_data.get('content')
+            words = content.split()
+
+            for word in words:
+                if word[0] == '#':
+                    #create hashtag
+                    hashtag = HashTag.objects.get_or_create(content=word)
+                    #connect hashtag to post
+                    post.hashtags.add(hashtag[0])
+
+
             return redirect("posts:index")
         else:
             # 7. 적절하지 않은 데이터가 들어온다.
@@ -53,6 +80,18 @@ def update(request, post_id):
             form = PostForm(request.POST, instance=post)
             if form.is_valid():
                 form.save()
+                #기존의 M:N관계를 삭제
+                post.hashtags.clear()
+                # 해시태그 추가
+                content = form.cleaned_data.get('content')
+                words = content.split()
+
+                for word in words:
+                    if word[0] == '#':
+                        # create hashtag
+                        hashtag = HashTag.objects.get_or_create(content=word)
+                        # connect hashtag to post
+                        post.hashtags.add(hashtag[0])
                 return redirect("posts:index")
             else:
                 pass
@@ -84,8 +123,29 @@ def likes(request, post_id):
     if user in post.like_users.all():
         # 좋아요 취소
         post.like_users.remove(user)
+        is_like = False
     # 좋아요 안했으면
     else:
         # 좋아요 추가
         post.like_users.add(user)
-    return redirect("posts:index")
+        is_like = True
+    context ={
+        'is_like' : is_like
+    }
+    # return redirect("posts:index")
+    return JsonResponse(context)
+
+def hashtags(request, hashtag_id):               # all과 구조 거의 똑같음
+    hashtag = HashTag.objects.get(id=hashtag_id)
+    posts = hashtag.post_set.all() # 해쉬태그가 포함되어 있는 모든 게시물 리스트 가져오기 _set 사용
+    comment_form = CommentForm()
+    context = {
+        'posts': posts,
+        'comment_form': comment_form,
+        'hashtag' : hashtag,
+    }
+    return render(request, 'posts/index.html', context)
+
+
+def javascript(request):
+    return render(request, 'posts/js.html')
